@@ -30,26 +30,29 @@ y = y(:,1);
 N = length(y);
 t = [0:N-1]/Fs;
 f = [0:N-1]*Fs/N;
+
 % Tracé temporel 
 figure(1)
-subplot(311),plot(t,y),grid, xlabel('Signal original')
+subplot(211),plot(t,y),grid, xlabel('Signal original')
 title("Signal d'entrée")
+
 % Spectre (TFCT)
 % subplot(312),plot(f-Fs/2,fftshift(abs(y))),grid, xlabel('Spectre (TFD)')
-nov = 1023;
-D = TFCT(y,1024,1024,nov);
-D2 = TFCT_Interp(D, t, nov);
+% nov = 1023;
+% D = TFCT(y,1024,1024,nov);
+% D2 = TFCT_Interp(D, t, nov);
 % D1 = abs(D(:,1));
 % f1 = f(0:length(D1));
 % subplot(312),plot(f1-Fs/2,D1),grid, xlabel('Spectre (TFCT)')
+
 % Spectrogramme
-subplot(313),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
+subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
 
 % Ecoute
 %-------
 % A FAIRE !
-soundsc(y,Fs)
-pause
+% soundsc(y,Fs)
+% pause
 
 %%
 %-------------------------------
@@ -63,20 +66,24 @@ ylent = PVoc(y,rapp,1024);
 % Ecoute
 %-------
 % A FAIRE !
-soundsc(ylent,Fs)
-pause
+% Fslent = rapp * Fs;
+% soundsc(ylent,Fs)
+% pause
 
 % Courbes
 %--------
 % A FAIRE !
 % Tracé temporel 
+Nlent = length(ylent);
+tlent = [0:Nlent-1]/Fs;
+flent = [0:Nlent-1]*Fs/Nlent;
 figure(2)
-subplot(311),plot(t,ylent),grid, xlabel('Signal original')
+subplot(211),plot(tlent,ylent),grid, xlabel('Signal original')
 title("Signal ralenti")
 % Spectre (TFCT)
-subplot(312),plot(f-Fs/2,fftshift(abs(ylent))),grid, xlabel('Spectre (TFD)')
+% subplot(312),plot(f-Fs/2,fftshift(abs(ylent))),grid, xlabel('Spectre (TFD)')
 % Spectrogramme
-subplot(313),spectrogram(ylent,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
+subplot(212),spectrogram(ylent,128,120,128,Fslent,'yaxis'), xlabel('Spectrogramme')
 
 
 %
@@ -88,96 +95,99 @@ yrapide = PVoc(y,rapp,1024);
 % Ecoute 
 %-------
 % A FAIRE !
-soundsc(yrapide,Fs)
-pause
+% soundsc(yrapide,Fs)
+% pause
 
 % Courbes
 %--------
 % A FAIRE !
+Nrapide = length(yrapide);
+trapide = [0:Nrapide-1]/Fs;
+frapide = [0:Nrapide-1]*Fs/Nrapide;
 % Tracé temporel 
 figure(3)
-subplot(311),plot(t,yrapide),grid, xlabel('Signal original')
+subplot(211),plot(trapide,yrapide),grid, xlabel('Signal original')
 title("Signal accéléré")
 % Spectre (TFD)
-subplot(312),plot(f-Fs/2,fftshift(abs(yrapide))),grid, xlabel('Spectre (TFD)')
+% subplot(312),plot(f-Fs/2,fftshift(abs(yrapide))),grid, xlabel('Spectre (TFD)')
 % Spectrogramme
-subplot(313),spectrogram(yrapide,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
+subplot(212),spectrogram(yrapide,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
+% 
+% %%
+% %----------------------------------
+% % 2- MODIFICATION DU PITCH
+% % (sans modification de vitesse)
+% %----------------------------------
+% % Paramètres généraux:
+% %---------------------
+% % Nombre de points pour la FFT/IFFT
+% Nfft = 256;
+% 
+% % Nombre de points (longueur) de la fenêtre de pondération 
+% % (par défaut fenêtre de Hanning)
+% Nwind = Nfft;
+% 
+% % Augmentation 
+% %--------------
+% a = 2;  b = 3;  %peut être modifié
+% yvoc = PVoc(y, a/b,Nfft,Nwind);
+% 
+% % Ré-échantillonnage du signal temporel afin de garder la même vitesse
+% % A FAIRE !
+% 
+% %Somme de l'original et du signal modifié
+% %Attention : on doit prendre le même nombre d'échantillons
+% %Remarque : vous pouvez mettre un coefficient à ypitch pour qu'il
+% %intervienne + ou - dans la somme...
+% % A FAIRE !
+% 
+% % Ecoute
+% %-------
+% % A FAIRE !
+% 
+% % Courbes
+% %--------
+% % A FAIRE !
+% 
+% 
+% %Diminution 
+% %------------
+% 
+% a = 3;  b = 2;   %peut être modifié
+% yvoc = PVoc(y, a/b,Nfft,Nwind); 
+% 
+% % Ré-échantillonnage du signal temporel afin de garder la même vitesse
+% % A FAIRE !
+% 
+% %Somme de l'original et du signal modifié
+% %Attention : on doit prendre le même nombre d'échantillons
+% %Remarque : vous pouvez mettre un coefficient à ypitch pour qu'il
+% %intervienne + ou - dans la somme...
+% % A FAIRE !
+% 
+% % Ecoute
+% %-------
+% % A FAIRE !
+% 
+% % Courbes
+% %--------
+% % A FAIRE !
+% 
 
 %%
-%----------------------------------
-% 2- MODIFICATION DU PITCH
-% (sans modification de vitesse)
-%----------------------------------
-% Paramètres généraux:
-%---------------------
-% Nombre de points pour la FFT/IFFT
-Nfft = 256;
-
-% Nombre de points (longueur) de la fenêtre de pondération 
-% (par défaut fenêtre de Hanning)
-Nwind = Nfft;
-
-% Augmentation 
-%--------------
-a = 2;  b = 3;  %peut être modifié
-yvoc = PVoc(y, a/b,Nfft,Nwind);
-
-% Ré-échantillonnage du signal temporel afin de garder la même vitesse
-% A FAIRE !
-
-%Somme de l'original et du signal modifié
-%Attention : on doit prendre le même nombre d'échantillons
-%Remarque : vous pouvez mettre un coefficient à ypitch pour qu'il
-%intervienne + ou - dans la somme...
-% A FAIRE !
-
-% Ecoute
-%-------
-% A FAIRE !
-
-% Courbes
-%--------
-% A FAIRE !
-
-
-%Diminution 
-%------------
-
-a = 3;  b = 2;   %peut être modifié
-yvoc = PVoc(y, a/b,Nfft,Nwind); 
-
-% Ré-échantillonnage du signal temporel afin de garder la même vitesse
-% A FAIRE !
-
-%Somme de l'original et du signal modifié
-%Attention : on doit prendre le même nombre d'échantillons
-%Remarque : vous pouvez mettre un coefficient à ypitch pour qu'il
-%intervienne + ou - dans la somme...
-% A FAIRE !
-
-% Ecoute
-%-------
-% A FAIRE !
-
-% Courbes
-%--------
-% A FAIRE !
-
-
-%%
-%----------------------------
-% 3- ROBOTISATION DE LA VOIX
-%-----------------------------
-% Choix de la fréquence porteuse (2000, 1000, 500, 200)
-Fc = 500;   %peut être modifié
-
-yrob = Rob(y,Fc,Fs);
-
-% Ecoute
-%-------
-% A FAIRE !
-
-% Courbes
-%-------------
-% A FAIRE !
+% %----------------------------
+% % 3- ROBOTISATION DE LA VOIX
+% %-----------------------------
+% % Choix de la fréquence porteuse (2000, 1000, 500, 200)
+% Fc = 500;   %peut être modifié
+% 
+% yrob = Rob(y,Fc,Fs);
+% 
+% % Ecoute
+% %-------
+% % A FAIRE !
+% 
+% % Courbes
+% %-------------
+% % A FAIRE !
 
