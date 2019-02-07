@@ -36,8 +36,12 @@ subplot(311),plot(t,y),grid, xlabel('Signal original')
 title("Signal d'entrée")
 % Spectre (TFCT)
 % subplot(312),plot(f-Fs/2,fftshift(abs(y))),grid, xlabel('Spectre (TFD)')
-D = TFCT(y,1024,1024,1023)
-subplot(312),plot(f-Fs/2,D),grid, xlabel('Spectre (TFCT)')
+nov = 1023;
+D = TFCT(y,1024,1024,nov);
+D2 = TFCT_Interp(D, t, nov);
+% D1 = abs(D(:,1));
+% f1 = f(0:length(D1));
+% subplot(312),plot(f1-Fs/2,D1),grid, xlabel('Spectre (TFCT)')
 % Spectrogramme
 subplot(313),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
 
