@@ -67,8 +67,8 @@ ylent = PVoc(y,rapp,1024);
 %-------
 % A FAIRE !
 % Fslent = rapp * Fs;
-% soundsc(ylent,Fs)
-% pause
+soundsc(ylent,Fs)
+pause
 
 % Courbes
 %--------
@@ -83,7 +83,7 @@ title("Signal ralenti")
 % Spectre (TFCT)
 % subplot(312),plot(f-Fs/2,fftshift(abs(ylent))),grid, xlabel('Spectre (TFD)')
 % Spectrogramme
-subplot(212),spectrogram(ylent,128,120,128,Fslent,'yaxis'), xlabel('Spectrogramme')
+subplot(212),spectrogram(ylent,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
 
 
 %
@@ -95,8 +95,8 @@ yrapide = PVoc(y,rapp,1024);
 % Ecoute 
 %-------
 % A FAIRE !
-% soundsc(yrapide,Fs)
-% pause
+soundsc(yrapide,Fs)
+pause
 
 % Courbes
 %--------
