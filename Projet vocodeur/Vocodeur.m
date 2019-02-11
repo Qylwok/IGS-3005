@@ -54,125 +54,159 @@ subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
 % soundsc(y,Fs)
 % pause
 
+% %%
+% %-------------------------------
+% % 1- MODIFICATION DE LA VITESSE
+% % (sans modification du pitch)
+% %-------------------------------
+% % PLUS LENT
+% rapp = 2/3;   %peut être modifié
+% ylent = PVoc(y,rapp,1024); 
+% 
+% % Ecoute
+% %-------
+% % A FAIRE !
+% % Fslent = rapp * Fs;
+% soundsc(ylent,Fs)
+% pause
+% 
+% % Courbes
+% %--------
+% % A FAIRE !
+% % Tracé temporel 
+% Nlent = length(ylent);
+% tlent = [0:Nlent-1]/Fs;
+% flent = [0:Nlent-1]*Fs/Nlent;
+% figure(2)
+% subplot(211),plot(tlent,ylent),grid, xlabel('Signal original')
+% title("Signal ralenti")
+% % Spectre (TFCT)
+% % subplot(312),plot(f-Fs/2,fftshift(abs(ylent))),grid, xlabel('Spectre (TFD)')
+% % Spectrogramme
+% subplot(212),spectrogram(ylent,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
+% 
+% 
+% %
+% % PLUS RAPIDE
+% rapp = 3/2;   %peut être modifié
+% yrapide = PVoc(y,rapp,1024); 
+% 
+% 
+% % Ecoute 
+% %-------
+% % A FAIRE !
+% soundsc(yrapide,Fs)
+% pause
+% 
+% % Courbes
+% %--------
+% % A FAIRE !
+% Nrapide = length(yrapide);
+% trapide = [0:Nrapide-1]/Fs;
+% frapide = [0:Nrapide-1]*Fs/Nrapide;
+% % Tracé temporel 
+% figure(3)
+% subplot(211),plot(trapide,yrapide),grid, xlabel('Signal original')
+% title("Signal accéléré")
+% % Spectre (TFD)
+% % subplot(312),plot(f-Fs/2,fftshift(abs(yrapide))),grid, xlabel('Spectre (TFD)')
+% % Spectrogramme
+% subplot(212),spectrogram(yrapide,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
+
 %%
-%-------------------------------
-% 1- MODIFICATION DE LA VITESSE
-% (sans modification du pitch)
-%-------------------------------
-% PLUS LENT
-rapp = 2/3;   %peut être modifié
-ylent = PVoc(y,rapp,1024); 
+%----------------------------------
+% 2- MODIFICATION DU PITCH
+% (sans modification de vitesse)
+%----------------------------------
+% Paramètres généraux:
+%---------------------
+% Nombre de points pour la FFT/IFFT
+Nfft = 256;
+
+% Nombre de points (longueur) de la fenêtre de pondération 
+% (par défaut fenêtre de Hanning)
+Nwind = Nfft;
+
+% Augmentation 
+%--------------
+a = 2;  b = 3;  %peut être modifié
+rapp = a/b;
+yvoc = PVoc(y, rapp,Nfft,Nwind);
+
+% Ré-échantillonnage du signal temporel afin de garder la même vitesse
+% A FAIRE !
+nouv_Fe = Fs*rapp;
+reech_y = zeros(N, 1);
+i = 1;
+while i < N
+    a = rapp*i - round(rapp*i);
+    b = 1 - a;
+    ind_c = round(rapp*i);
+    reech_y(i,:) = a*yvoc(ind_c,:) + b*yvoc(ind_c + 1,:);
+    i = i+1;
+end
+
+%Somme de l'original et du signal modifié
+%Attention : on doit prendre le même nombre d'échantillons
+%Remarque : vous pouvez mettre un coefficient à ypitch pour qu'il
+%intervienne + ou - dans la somme...
+% A FAIRE !
+y_somme = zeros(N, 1);
+i = 1;
+ypitch = 1;
+while i < N
+    y_somme(i,:) = y(i,:) + ypitch*reech_y(i,:);
+    i = i+1;
+end
+% Ecoute
+%-------
+% A FAIRE !
+soundsc(reech_y,Fs)
+pause
+soundsc(y_somme,Fs)
+pause
+
+% Courbes
+%--------
+% A FAIRE !
+% Tracé temporel 
+figure(4)
+subplot(211),plot(t,y),grid, xlabel('Signal réhaussé')
+title("Signal réhaussé")
+% Spectrogramme
+subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme réhaussé')
+
+figure(5)
+subplot(211),plot(t,y),grid, xlabel('Signal sommé')
+title("Signal sommé")
+% Spectrogramme
+subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme sommé')
+
+
+%Diminution 
+%------------
+
+a = 3;  b = 2;   %peut être modifié
+rapp = a/b;
+yvoc = PVoc(y, rapp,Nfft,Nwind); 
+
+% Ré-échantillonnage du signal temporel afin de garder la même vitesse
+% A FAIRE !
+
+%Somme de l'original et du signal modifié
+%Attention : on doit prendre le même nombre d'échantillons
+%Remarque : vous pouvez mettre un coefficient à ypitch pour qu'il
+%intervienne + ou - dans la somme...
+% A FAIRE !
 
 % Ecoute
 %-------
 % A FAIRE !
-% Fslent = rapp * Fs;
-soundsc(ylent,Fs)
-pause
 
 % Courbes
 %--------
 % A FAIRE !
-% Tracé temporel 
-Nlent = length(ylent);
-tlent = [0:Nlent-1]/Fs;
-flent = [0:Nlent-1]*Fs/Nlent;
-figure(2)
-subplot(211),plot(tlent,ylent),grid, xlabel('Signal original')
-title("Signal ralenti")
-% Spectre (TFCT)
-% subplot(312),plot(f-Fs/2,fftshift(abs(ylent))),grid, xlabel('Spectre (TFD)')
-% Spectrogramme
-subplot(212),spectrogram(ylent,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
 
-
-%
-% PLUS RAPIDE
-rapp = 3/2;   %peut être modifié
-yrapide = PVoc(y,rapp,1024); 
-
-
-% Ecoute 
-%-------
-% A FAIRE !
-soundsc(yrapide,Fs)
-pause
-
-% Courbes
-%--------
-% A FAIRE !
-Nrapide = length(yrapide);
-trapide = [0:Nrapide-1]/Fs;
-frapide = [0:Nrapide-1]*Fs/Nrapide;
-% Tracé temporel 
-figure(3)
-subplot(211),plot(trapide,yrapide),grid, xlabel('Signal original')
-title("Signal accéléré")
-% Spectre (TFD)
-% subplot(312),plot(f-Fs/2,fftshift(abs(yrapide))),grid, xlabel('Spectre (TFD)')
-% Spectrogramme
-subplot(212),spectrogram(yrapide,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
-% 
-% %%
-% %----------------------------------
-% % 2- MODIFICATION DU PITCH
-% % (sans modification de vitesse)
-% %----------------------------------
-% % Paramètres généraux:
-% %---------------------
-% % Nombre de points pour la FFT/IFFT
-% Nfft = 256;
-% 
-% % Nombre de points (longueur) de la fenêtre de pondération 
-% % (par défaut fenêtre de Hanning)
-% Nwind = Nfft;
-% 
-% % Augmentation 
-% %--------------
-% a = 2;  b = 3;  %peut être modifié
-% yvoc = PVoc(y, a/b,Nfft,Nwind);
-% 
-% % Ré-échantillonnage du signal temporel afin de garder la même vitesse
-% % A FAIRE !
-% 
-% %Somme de l'original et du signal modifié
-% %Attention : on doit prendre le même nombre d'échantillons
-% %Remarque : vous pouvez mettre un coefficient à ypitch pour qu'il
-% %intervienne + ou - dans la somme...
-% % A FAIRE !
-% 
-% % Ecoute
-% %-------
-% % A FAIRE !
-% 
-% % Courbes
-% %--------
-% % A FAIRE !
-% 
-% 
-% %Diminution 
-% %------------
-% 
-% a = 3;  b = 2;   %peut être modifié
-% yvoc = PVoc(y, a/b,Nfft,Nwind); 
-% 
-% % Ré-échantillonnage du signal temporel afin de garder la même vitesse
-% % A FAIRE !
-% 
-% %Somme de l'original et du signal modifié
-% %Attention : on doit prendre le même nombre d'échantillons
-% %Remarque : vous pouvez mettre un coefficient à ypitch pour qu'il
-% %intervienne + ou - dans la somme...
-% % A FAIRE !
-% 
-% % Ecoute
-% %-------
-% % A FAIRE !
-% 
-% % Courbes
-% %--------
-% % A FAIRE !
-% 
 
 %%
 % %----------------------------
