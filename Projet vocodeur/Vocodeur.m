@@ -135,35 +135,22 @@ yvoc = PVoc(y, rapp,Nfft,Nwind);
 
 % Ré-échantillonnage du signal temporel afin de garder la même vitesse
 % A FAIRE !
-nouv_Fe = Fs*rapp;
-reech_y = zeros(N, 1);
-i = 1;
-while i < N
-    a = rapp*i - round(rapp*i);
-    b = 1 - a;
-    ind_c = round(rapp*i);
-    reech_y(i,:) = a*yvoc(ind_c,:) + b*yvoc(ind_c + 1,:);
-    i = i+1;
-end
+yreech = resample(yvoc, a, b);
 
 %Somme de l'original et du signal modifié
 %Attention : on doit prendre le même nombre d'échantillons
 %Remarque : vous pouvez mettre un coefficient à ypitch pour qu'il
 %intervienne + ou - dans la somme...
 % A FAIRE !
-y_somme = zeros(N, 1);
-i = 1;
 ypitch = 1;
-while i < N
-    y_somme(i,:) = y(i,:) + ypitch*reech_y(i,:);
-    i = i+1;
-end
+ysomme = y(1:length(yreech)) + ypitch*yreech;
+
 % Ecoute
 %-------
 % A FAIRE !
-soundsc(reech_y,Fs)
+soundsc(yreech,Fs)
 pause
-soundsc(y_somme,Fs)
+soundsc(ysomme,Fs)
 pause
 
 % Courbes
@@ -177,8 +164,8 @@ title("Signal réhaussé")
 subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme réhaussé')
 
 figure(5)
-subplot(211),plot(t,y),grid, xlabel('Signal sommé')
-title("Signal sommé")
+subplot(211),plot(t,y),grid, xlabel('Signal sommé (augmenté)')
+title("Signal sommé (augmenté)")
 % Spectrogramme
 subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme sommé')
 
@@ -192,20 +179,36 @@ yvoc = PVoc(y, rapp,Nfft,Nwind);
 
 % Ré-échantillonnage du signal temporel afin de garder la même vitesse
 % A FAIRE !
+yreech = resample(yvoc, a, b);
 
 %Somme de l'original et du signal modifié
 %Attention : on doit prendre le même nombre d'échantillons
 %Remarque : vous pouvez mettre un coefficient à ypitch pour qu'il
 %intervienne + ou - dans la somme...
 % A FAIRE !
-
+ypitch = 1;
+ysomme = y(1:length(yreech)) + ypitch*yreech;
 % Ecoute
 %-------
 % A FAIRE !
-
+soundsc(yreech,Fs)
+pause
+soundsc(ysomme,Fs)
+pause
 % Courbes
 %--------
 % A FAIRE !
+figure(6)
+subplot(211),plot(t,y),grid, xlabel('Signal diminué')
+title("Signal diminué")
+% Spectrogramme
+subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme réhaussé')
+
+figure(7)
+subplot(211),plot(t,y),grid, xlabel('Signal sommé (diminution)')
+title("Signal sommé (diminution)")
+% Spectrogramme
+subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme sommé')
 
 
 %%

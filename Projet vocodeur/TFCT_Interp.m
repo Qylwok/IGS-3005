@@ -32,7 +32,17 @@ coeff = length(t)/nc;
 i = 1;
 while ind_col < nc
     X2col = [X(:,ind_col), X(:,ind_col+1)]; % Deux colonnes (= TFCT) successives
-    t_col = t(round(ind_col*coeff):round((ind_col+1)*coeff-1));
+    if round((ind_col+1)*coeff-1) < 0
+        t_col = t(round(ind_col*coeff));
+    elseif round(ind_col*coeff) == round((ind_col+1)*coeff)-1
+        if round(ind_col*coeff) == 0
+            t_col = t(1);
+        else
+            t_col = t(round(ind_col*coeff));
+        end
+    else
+        t_col = t(round(ind_col*coeff):round((ind_col+1)*coeff)-1);
+    end
     for tn = t_col
                                 % Exemple : tn = 6.39
         beta = tn - floor(tn);  % ==>   beta  = 0.39
