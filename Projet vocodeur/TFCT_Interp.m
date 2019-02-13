@@ -29,7 +29,7 @@ My = zeros(nl, length(t));
 %Pour chaque valeur de t, on calcule la nouvelle colonne de Y à partir de 2
 %colonnes successives de X
 coeff = length(t)/nc;
-i = 1;
+k = 1;
 while ind_col < nc
     X2col = [X(:,ind_col), X(:,ind_col+1)]; % Deux colonnes (= TFCT) successives
     if round((ind_col+1)*coeff-1) < 0
@@ -49,14 +49,14 @@ while ind_col < nc
         alpha = 1-beta;         %       alpha = 0.61
         % My = combinaison linéaire de deux colonnes successives de X
         % My pour 'Module y'
-        My(:,i) = alpha * X2col(:,1) + beta * X2col(:,2);
+        My(:,k) = alpha * X2col(:,1) + beta * X2col(:,2);
         % Ajout du terme de phase (I suppose)
-        y(:, i) = My(:,i).*exp(1i*phi);
+        y(:, k) = My(:,k).*exp(1i*phi);
         % Actualisation de la phase pour la prochaine itération (?)
         dphi = angle(X2col(:,2)-angle(X2col(:,1)-dphi0));
         dphi = dphi - 2 * pi *round(dphi/(2*pi));
         phi = phi + dphi + dphi0;
-        i = i + 1;
+        k = k + 1;
     end
     ind_col = ind_col +1;
 end

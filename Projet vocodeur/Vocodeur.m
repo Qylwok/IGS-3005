@@ -35,83 +35,70 @@ f = [0:N-1]*Fs/N;
 figure(1)
 subplot(211),plot(t,y),grid, xlabel('Signal original')
 title("Signal d'entrée")
-
-% Spectre (TFCT)
-% subplot(312),plot(f-Fs/2,fftshift(abs(y))),grid, xlabel('Spectre (TFD)')
-% nov = 1023;
-% D = TFCT(y,1024,1024,nov);
-% D2 = TFCT_Interp(D, t, nov);
-% D1 = abs(D(:,1));
-% f1 = f(0:length(D1));
-% subplot(312),plot(f1-Fs/2,D1),grid, xlabel('Spectre (TFCT)')
-
 % Spectrogramme
 subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
 
 % Ecoute
 %-------
 % A FAIRE !
-% soundsc(y,Fs)
-% pause
+soundsc(y,Fs)
+pause
 
-% %%
-% %-------------------------------
-% % 1- MODIFICATION DE LA VITESSE
-% % (sans modification du pitch)
-% %-------------------------------
-% % PLUS LENT
-% rapp = 2/3;   %peut être modifié
-% ylent = PVoc(y,rapp,1024); 
-% 
-% % Ecoute
-% %-------
-% % A FAIRE !
-% % Fslent = rapp * Fs;
-% soundsc(ylent,Fs)
-% pause
-% 
-% % Courbes
-% %--------
-% % A FAIRE !
-% % Tracé temporel 
-% Nlent = length(ylent);
-% tlent = [0:Nlent-1]/Fs;
-% flent = [0:Nlent-1]*Fs/Nlent;
-% figure(2)
-% subplot(211),plot(tlent,ylent),grid, xlabel('Signal original')
-% title("Signal ralenti")
-% % Spectre (TFCT)
-% % subplot(312),plot(f-Fs/2,fftshift(abs(ylent))),grid, xlabel('Spectre (TFD)')
-% % Spectrogramme
-% subplot(212),spectrogram(ylent,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
-% 
-% 
-% %
-% % PLUS RAPIDE
-% rapp = 3/2;   %peut être modifié
-% yrapide = PVoc(y,rapp,1024); 
-% 
-% 
-% % Ecoute 
-% %-------
-% % A FAIRE !
-% soundsc(yrapide,Fs)
-% pause
-% 
-% % Courbes
-% %--------
-% % A FAIRE !
-% Nrapide = length(yrapide);
-% trapide = [0:Nrapide-1]/Fs;
-% frapide = [0:Nrapide-1]*Fs/Nrapide;
-% % Tracé temporel 
-% figure(3)
-% subplot(211),plot(trapide,yrapide),grid, xlabel('Signal original')
-% title("Signal accéléré")
-% % Spectre (TFD)
-% % subplot(312),plot(f-Fs/2,fftshift(abs(yrapide))),grid, xlabel('Spectre (TFD)')
-% % Spectrogramme
-% subplot(212),spectrogram(yrapide,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
+%%
+%-------------------------------
+% 1- MODIFICATION DE LA VITESSE
+% (sans modification du pitch)
+%-------------------------------
+% PLUS LENT
+rapp = 2/3;   %peut être modifié
+ylent = PVoc(y,rapp,1024); 
+
+% Ecoute
+%-------
+% A FAIRE !
+soundsc(ylent,Fs)
+pause
+
+% Courbes
+%--------
+% A FAIRE !
+% Tracé temporel 
+Nlent = length(ylent);
+tlent = [0:Nlent-1]/Fs;
+flent = [0:Nlent-1]*Fs/Nlent;
+figure(2)
+subplot(211),plot(tlent,ylent),grid, xlabel('Signal original')
+title("Signal ralenti")
+% Spectre (TFCT)
+% subplot(312),plot(f-Fs/2,fftshift(abs(ylent))),grid, xlabel('Spectre (TFD)')
+% Spectrogramme
+subplot(212),spectrogram(ylent,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
+
+
+%
+% PLUS RAPIDE
+rapp = 3/2;   %peut être modifié
+yrapide = PVoc(y,rapp,1024); 
+
+
+% Ecoute 
+%-------
+% A FAIRE !
+soundsc(yrapide,Fs)
+pause
+
+% Courbes
+%--------
+% A FAIRE !
+Nrapide = length(yrapide);
+trapide = [0:Nrapide-1]/Fs;
+frapide = [0:Nrapide-1]*Fs/Nrapide;
+% Tracé temporel 
+figure(3)
+subplot(211),plot(trapide,yrapide),grid, xlabel('Signal original')
+title("Signal accéléré")
+% Spectrogramme
+subplot(212),spectrogram(yrapide,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
 
 %%
 %----------------------------------
@@ -186,8 +173,9 @@ yreech = resample(yvoc, a, b);
 %Remarque : vous pouvez mettre un coefficient à ypitch pour qu'il
 %intervienne + ou - dans la somme...
 % A FAIRE !
-ypitch = 1;
-ysomme = y(1:length(yreech)) + ypitch*yreech;
+ypitch = 3;
+Nmin = min(N, length(yreech));
+ysomme = y(1:Nmin) + ypitch*yreech(1:Nmin);
 % Ecoute
 %-------
 % A FAIRE !
@@ -211,20 +199,27 @@ title("Signal sommé (diminution)")
 subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme sommé')
 
 
-%%
-% %----------------------------
-% % 3- ROBOTISATION DE LA VOIX
-% %-----------------------------
-% % Choix de la fréquence porteuse (2000, 1000, 500, 200)
-% Fc = 500;   %peut être modifié
-% 
-% yrob = Rob(y,Fc,Fs);
-% 
-% % Ecoute
-% %-------
-% % A FAIRE !
-% 
-% % Courbes
-% %-------------
-% % A FAIRE !
+%
+%----------------------------
+% 3- ROBOTISATION DE LA VOIX
+%-----------------------------
+% Choix de la fréquence porteuse (2000, 1000, 500, 200)
+Fc = 500;   %peut être modifié
+
+yrob = Rob(y,Fc,Fs);
+
+% Ecoute
+%-------
+% A FAIRE !
+soundsc(yrob,Fs)
+% pause
+% Courbes
+%-------------
+% A FAIRE !
+% Signal temporel
+figure(8)
+subplot(211),plot(t,y),grid, xlabel('Signal robotisé')
+title("Signal robotisé")
+% Spectrogramme
+subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme robotisé')
 
