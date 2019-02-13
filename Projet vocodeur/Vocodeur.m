@@ -15,9 +15,10 @@
 % Récupération d'un signal audio
 %--------------------------------
 
- [y,Fs]=audioread('Diner.wav');   %signal d'origine
+[y,Fs]=audioread('Diner.wav');   %signal d'origine
 % [y,Fs]=audioread('Extrait.wav');   %signal d'origine
 % [y,Fs]=audioread('Halleluia.wav');   %signal d'origine
+% [y,Fs]=audioread('Gabe_dog.mp3');   %signal d'origine
 
 % Remarque : si le signal est en stéréo, ne traiter qu'une seule voie à la
 % fois
@@ -41,8 +42,8 @@ subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
 % Ecoute
 %-------
 % A FAIRE !
-soundsc(y,Fs)
-pause
+% soundsc(y,Fs)
+% pause
 
 %%
 %-------------------------------
@@ -107,6 +108,7 @@ subplot(212),spectrogram(yrapide,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme'
 %----------------------------------
 % Paramètres généraux:
 %---------------------
+[y,Fs]=audioread('Extrait.wav');   %signal d'origine
 % Nombre de points pour la FFT/IFFT
 Nfft = 256;
 
@@ -203,23 +205,48 @@ subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme sommé'
 %----------------------------
 % 3- ROBOTISATION DE LA VOIX
 %-----------------------------
+[y,Fs]=audioread('Diver.wav');   %signal d'origine
 % Choix de la fréquence porteuse (2000, 1000, 500, 200)
 Fc = 500;   %peut être modifié
-
+cste = ones(N,1);
 yrob = Rob(y,Fc,Fs);
-
+csterob = Rob(cste, Fc, Fs);
 % Ecoute
 %-------
 % A FAIRE !
-soundsc(yrob,Fs)
+soundsc(cste,Fs)
+pause
+soundsc(csterob,Fs)
 % pause
 % Courbes
 %-------------
 % A FAIRE !
 % Signal temporel
 figure(8)
-subplot(211),plot(t,y),grid, xlabel('Signal robotisé')
+subplot(211),plot(t,csterob),grid, xlabel('Signal robotisé')
 title("Signal robotisé")
 % Spectrogramme
-subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme robotisé')
+subplot(212),spectrogram(csterob,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme robotisé')
 
+figure(9)
+subplot(211),plot(t,yrob),grid, xlabel('Signal robotisé')
+title("Signal robotisé")
+% Spectrogramme
+subplot(212),spectrogram(yrob,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme robotisé')
+
+%%
+%----------------------------------
+% 4 - Mariotisation d'un signal
+%----------------------------------
+% Objectif : jouer les premières notes du thème de Mario Bros
+% à partir d'un extrait donné qu'on va repitcher à plusieurs 
+% reprise
+% ---------------------------------
+% ENTREES : 
+% x  : signal d'entrée
+% Fs : fréquence d'echantillonnage du signal
+% 
+% et c'est tout !
+[y,Fs]=audioread('Gabe_dog.mp3');   %signal d'origine (un chien qui aboie)
+y_mario = Mariotisation(y, Fs);
+soundsc(y_mario, Fs);
