@@ -52,17 +52,25 @@ f_sol= [24.5, 49, 98, 196, 392, 784, 1568, 3136, 6272, 12544];
 % cet extrait de 1/6 de secondes comme stationnaire, même si c'est
 % un peu abusé, je vous l'accorde ...), puis on regarde quelle fréquence
 % a le plus d'énergie
-tf_extrait = fftshift(abs(extrait_max));
+Ne = length(extrait_max);
+f = [0:Ne-1]*Fs/Ne; f = f-Fs/2;
 
-[valeur_max_f, freq_max] = max(extrait_max);
-freq_max = abs(freq_max);
+tf_extrait = fftshift(abs((1/Ne)*fft(extrait_max)));
+
+% figure(10)
+% subplot(111),spectrogram(extrait_max,128,120,128,Fs,'yaxis')%,
+% subplot(312), plot(f,fftshift(abs((1/Ne)*fft(extrait_max)))),grid
+
+
+[valeur_max_f, ind_freq_max] = max(tf_extrait);
+freq_max = abs(f(ind_freq_max));
 
 % Extraction de l'octave de la fréquence max de l'extrait
 indice = length(f_sol(f_sol < freq_max))+1;
 
 % Modification du pitch pour avoir le mi le plus proche (arrondi au dessus)
 % je veux faire plus aigue ==> a/b < 1 avec a = freq_max et b = f_mi
-a = freq_max*10;
+a = round(freq_max)*10;
 b = f_mi(:, indice)*10;
 modif_mi = PVoc(extrait_max, a/b);
 extrait_mi = resample(modif_mi, a, b);
