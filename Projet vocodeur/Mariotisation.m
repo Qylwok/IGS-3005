@@ -1,5 +1,6 @@
 function y = Mariotisation(x_stereo, Fs)
-
+% Cette fonction joue les notes de Mario à partir d'un signal donné
+% 
 % On ne garde qu'une seule des deux pistes (on ne traite pas le stéréo)
 x = x_stereo(:,1);
 N = length(x);

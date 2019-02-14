@@ -1,3 +1,6 @@
+close all
+clear
+fprintf("\n\n\n\n\n\n\n\n\n\n\n\n");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % VOCODEUR : Programme principal réalisant un vocodeur de phase 
 % et permettant de :
@@ -23,42 +26,38 @@
 % Remarque : si le signal est en stéréo, ne traiter qu'une seule voie à la
 % fois
 y = y(:,1);
+N = length(y);
+t = [0:N-1]/Fs;
+f = [0:N-1]*Fs/N;
 
 % Courbes (évolution au cours du temps, spectre et spectrogramme)
 %--------
 % Ne pas oublier de créer les vecteurs temps, fréquences...
 % A FAIRE !
-N = length(y);
-t = [0:N-1]/Fs;
-f = [0:N-1]*Fs/N;
-
 % Tracé temporel 
 figure(1)
-subplot(211),plot(t,y),grid, xlabel('Signal original')
+subplot(211),plot(t,y),grid%, xlabel('Signal original')
 title("Signal d'entrée")
 % Spectrogramme
-subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
+subplot(212),spectrogram(y,128,120,128,Fs,'yaxis')%, xlabel('Spectrogramme')
+fprintf("Signal original (next : ralentissement)\n");
 
 % Ecoute
 %-------
 % A FAIRE !
-% soundsc(y,Fs)
-% pause
+soundsc(y,Fs)
+pause
 
+fprintf("\n");
 %%
 %-------------------------------
 % 1- MODIFICATION DE LA VITESSE
 % (sans modification du pitch)
 %-------------------------------
+fprintf("PARTIE 1 : MODIFICATION DE LA VITESSE\n");
 % PLUS LENT
 rapp = 2/3;   %peut être modifié
 ylent = PVoc(y,rapp,1024); 
-
-% Ecoute
-%-------
-% A FAIRE !
-soundsc(ylent,Fs)
-pause
 
 % Courbes
 %--------
@@ -68,25 +67,22 @@ Nlent = length(ylent);
 tlent = [0:Nlent-1]/Fs;
 flent = [0:Nlent-1]*Fs/Nlent;
 figure(2)
-subplot(211),plot(tlent,ylent),grid, xlabel('Signal original')
+subplot(211),plot(tlent,ylent),grid%, xlabel('Signal original')
 title("Signal ralenti")
-% Spectre (TFCT)
-% subplot(312),plot(f-Fs/2,fftshift(abs(ylent))),grid, xlabel('Spectre (TFD)')
 % Spectrogramme
-subplot(212),spectrogram(ylent,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
+subplot(212),spectrogram(ylent,128,120,128,Fs,'yaxis')%, xlabel('Spectrogramme')
+fprintf("\tSignal ralenti (next : acceleration)\n");
 
+% Ecoute
+%-------
+% A FAIRE !
+soundsc(ylent,Fs)
+pause
 
 %
 % PLUS RAPIDE
 rapp = 3/2;   %peut être modifié
 yrapide = PVoc(y,rapp,1024); 
-
-
-% Ecoute 
-%-------
-% A FAIRE !
-soundsc(yrapide,Fs)
-pause
 
 % Courbes
 %--------
@@ -96,19 +92,33 @@ trapide = [0:Nrapide-1]/Fs;
 frapide = [0:Nrapide-1]*Fs/Nrapide;
 % Tracé temporel 
 figure(3)
-subplot(211),plot(trapide,yrapide),grid, xlabel('Signal original')
+subplot(211),plot(trapide,yrapide),grid%, xlabel('Signal original')
 title("Signal accéléré")
 % Spectrogramme
-subplot(212),spectrogram(yrapide,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme')
+subplot(212),spectrogram(yrapide,128,120,128,Fs,'yaxis')%, xlabel('Spectrogramme')
+fprintf("\tSignal accéléré (next : augmentation du pitch)\n");
 
+% Ecoute 
+%-------
+% A FAIRE !
+soundsc(yrapide,Fs)
+pause
+
+fprintf("\n");
 %%
 %----------------------------------
 % 2- MODIFICATION DU PITCH
 % (sans modification de vitesse)
 %----------------------------------
+fprintf("PARTIE 2 : MODIFICATION DU PITCH\n");
 % Paramètres généraux:
 %---------------------
-[y,Fs]=audioread('Extrait.wav');   %signal d'origine
+clear;
+[y,Fs]=audioread('Diner.wav');   %signal d'origine
+y = y(:,1);
+N = length(y);
+t = [0:N-1]/Fs;
+f = [0:N-1]*Fs/N;
 % Nombre de points pour la FFT/IFFT
 Nfft = 256;
 
@@ -116,9 +126,11 @@ Nfft = 256;
 % (par défaut fenêtre de Hanning)
 Nwind = Nfft;
 
+
+
 % Augmentation 
 %--------------
-a = 2;  b = 3;  %peut être modifié
+a = 3;  b = 4;  %peut être modifié
 rapp = a/b;
 yvoc = PVoc(y, rapp,Nfft,Nwind);
 
@@ -134,35 +146,35 @@ yreech = resample(yvoc, a, b);
 ypitch = 1;
 ysomme = y(1:length(yreech)) + ypitch*yreech;
 
-% Ecoute
-%-------
-% A FAIRE !
-soundsc(yreech,Fs)
-pause
-soundsc(ysomme,Fs)
-pause
-
 % Courbes
 %--------
 % A FAIRE !
 % Tracé temporel 
 figure(4)
-subplot(211),plot(t,y),grid, xlabel('Signal réhaussé')
-title("Signal réhaussé")
+subplot(411),plot(t,y),grid%, xlabel('Signal augmenté')
+title("Signal augmenté")
 % Spectrogramme
-subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme réhaussé')
+subplot(412),spectrogram(y,128,120,128,Fs,'yaxis')%, xlabel('Spectrogramme augmenté')
 
-figure(5)
-subplot(211),plot(t,y),grid, xlabel('Signal sommé (augmenté)')
+subplot(413),plot(t,y),grid%, xlabel('Signal sommé (augmenté)')
 title("Signal sommé (augmenté)")
 % Spectrogramme
-subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme sommé')
+subplot(414),spectrogram(y,128,120,128,Fs,'yaxis')%, xlabel('Spectrogramme sommé')
+fprintf("\tSignal augmenté (next : original + augmenté)\n");
 
+% Ecoute
+%-------
+% A FAIRE !
+soundsc(yreech,Fs)
+pause
+fprintf("\tSignal original + signal augmenté (next : diminution)\n");
+soundsc(ysomme,Fs)
+pause
 
 %Diminution 
 %------------
 
-a = 3;  b = 2;   %peut être modifié
+a = 4;  b = 3;   %peut être modifié
 rapp = a/b;
 yvoc = PVoc(y, rapp,Nfft,Nwind); 
 
@@ -178,66 +190,79 @@ yreech = resample(yvoc, a, b);
 ypitch = 3;
 Nmin = min(N, length(yreech));
 ysomme = y(1:Nmin) + ypitch*yreech(1:Nmin);
+
+% Courbes
+%--------
+% A FAIRE !
+figure(5)
+subplot(411),plot(t,y),grid%, xlabel('Signal diminué')
+title("Signal diminué")
+% Spectrogramme
+subplot(412),spectrogram(y,128,120,128,Fs,'yaxis')%, xlabel('Spectrogramme augmenté')
+
+subplot(413),plot(t,y),grid%, xlabel('Signal sommé (diminution)')
+title("Signal sommé (diminution)")
+% Spectrogramme
+subplot(414),spectrogram(y,128,120,128,Fs,'yaxis')%, xlabel('Spectrogramme sommé')
+fprintf("\tSignal diminué (next : original + diminué)\n");
+
 % Ecoute
 %-------
 % A FAIRE !
 soundsc(yreech,Fs)
 pause
+fprintf("\tSignal original + signal diminué (next : robotisation)\n");
 soundsc(ysomme,Fs)
 pause
-% Courbes
-%--------
-% A FAIRE !
-figure(6)
-subplot(211),plot(t,y),grid, xlabel('Signal diminué')
-title("Signal diminué")
-% Spectrogramme
-subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme réhaussé')
 
-figure(7)
-subplot(211),plot(t,y),grid, xlabel('Signal sommé (diminution)')
-title("Signal sommé (diminution)")
-% Spectrogramme
-subplot(212),spectrogram(y,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme sommé')
-
-
-%
+fprintf("\n");
+%%
 %----------------------------
 % 3- ROBOTISATION DE LA VOIX
 %-----------------------------
-[y,Fs]=audioread('Diver.wav');   %signal d'origine
+fprintf("PARTIE 3 : ROBOTISATION\n");
+
+clear;
+[y,Fs]=audioread('Diner.wav');   %signal d'origine
+y = y(:,1);
+N = length(y);
+t = [0:N-1]/Fs;
+f = [0:N-1]*Fs/N;
+
 % Choix de la fréquence porteuse (2000, 1000, 500, 200)
 Fc = 500;   %peut être modifié
-cste = ones(N,1);
 yrob = Rob(y,Fc,Fs);
-csterob = Rob(cste, Fc, Fs);
-% Ecoute
-%-------
-% A FAIRE !
-soundsc(cste,Fs)
-pause
-soundsc(csterob,Fs)
-% pause
+% cste = ones(N,1);
+% csterob = Rob(cste, Fc, Fs);
+
 % Courbes
 %-------------
 % A FAIRE !
 % Signal temporel
-figure(8)
-subplot(211),plot(t,csterob),grid, xlabel('Signal robotisé')
+figure(6)
+subplot(211),plot(t,yrob),grid%, xlabel('Signal robotisé')
 title("Signal robotisé")
 % Spectrogramme
-subplot(212),spectrogram(csterob,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme robotisé')
+subplot(212),spectrogram(yrob,128,120,128,Fs,'yaxis')%, xlabel('Spectrogramme robotisé')
+fprintf("\tSignal robotisé (next : signal qui va être mariotisé)\n");
 
-figure(9)
-subplot(211),plot(t,yrob),grid, xlabel('Signal robotisé')
-title("Signal robotisé")
-% Spectrogramme
-subplot(212),spectrogram(yrob,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme robotisé')
+% Ecoute
+%-------
+% A FAIRE !
+% soundsc(cste,Fs)
+% pause
+% soundsc(csterob,Fs)
+% pause
+soundsc(yrob,Fs)
+pause
+
+fprintf("\n");
 
 %%
 %----------------------------------
 % 4 - Mariotisation d'un signal
 %----------------------------------
+fprintf("PARTIE 4 : MARIOTISATION\n");
 % Objectif : jouer les premières notes du thème de Mario Bros
 % à partir d'un extrait donné qu'on va repitcher à plusieurs 
 % reprise
@@ -247,6 +272,35 @@ subplot(212),spectrogram(yrob,128,120,128,Fs,'yaxis'), xlabel('Spectrogramme rob
 % Fs : fréquence d'echantillonnage du signal
 % 
 % et c'est tout !
+clear;
 [y,Fs]=audioread('Gabe_dog.mp3');   %signal d'origine (un chien qui aboie)
+y = y(:,1);
+N = length(y);
+t = [0:N-1]/Fs;
+f = [0:N-1]*Fs/N;
+
 y_mario = Mariotisation(y, Fs);
+
+% Signal temporel
+figure(6)
+subplot(211),plot(t, y),grid%, xlabel('Signal robotisé')
+title("Signal destiné à être mariotisé")
+% Spectrogramme
+subplot(212),spectrogram(y,128,120,128,Fs,'yaxis')%, xlabel('Spectrogramme robotisé')
+
+% Ecoute
+soundsc(y, Fs);
+fprintf("\tSignal destiné à être mariotisé (durée : 33 secondes (désolé ...)) (next : signal mariotisé)\n");
+pause
+
+% Signal temporel
+figure(7)
+subplot(211),plot(t(1:length(y_mario)), y_mario),grid%, xlabel('Signal robotisé')
+title("Signal mariotisé")
+% Spectrogramme
+subplot(212),spectrogram(y_mario,128,120,128,Fs,'yaxis')%, xlabel('Spectrogramme robotisé')
+
+% Ecoute mariotisé
 soundsc(y_mario, Fs);
+fprintf("\tSignal mariotisé (end)\n");
+
